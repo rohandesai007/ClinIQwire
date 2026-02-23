@@ -61,16 +61,36 @@ To stop the server, press <kbd>Ctrl</kbd>+<kbd>C</kbd> in the terminal.
 
 ## Deployment (sharing with others)
 
-If you want to share the site publicly on the internet, you need to deploy it to a host. The easiest option is **Vercel** – it is free for personal projects and deploys directly from GitHub with zero configuration.
+If you want to share the site publicly on the internet, you need to deploy it to a host. The easiest option is **Vercel** – it is free for personal projects.
+
+### Automated deployment via GitHub Actions (recommended)
+
+This repository includes a GitHub Actions workflow (`.github/workflows/deploy.yml`) that **automatically deploys to Vercel** every time you push to `main`, and creates **preview deployments** for every pull request.
+
+#### One-time setup
+
+1. **Create a Vercel project**
+   - Go to [vercel.com](https://vercel.com), sign in with GitHub, click **Add New → Project**, and import this repository.
+   - Vercel will detect Next.js automatically — just click **Deploy** to do the first manual deploy.
+
+2. **Collect the three required values**
+
+   | Secret name | Where to find it |
+   |---|---|
+   | `VERCEL_TOKEN` | [vercel.com/account/tokens](https://vercel.com/account/tokens) → **Create Token** |
+   | `VERCEL_ORG_ID` | Project **Settings → General** → *Team ID* (or your personal account ID) |
+   | `VERCEL_PROJECT_ID` | Project **Settings → General** → *Project ID* |
+
+3. **Add the secrets to GitHub**
+   - In this repository go to **Settings → Secrets and variables → Actions → New repository secret**.
+   - Add each of the three secrets above.
+
+Once the secrets are saved, every push to `main` will trigger a production deployment automatically. ✅
+
+### Manual one-click deploy
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Frohandesai007%2FClinIQwire)
 
-> **Fork users:** update the `repository-url` in the button link above to point to your own fork, or just follow the manual steps below.
-
-**Manual steps:**
-1. Push your code to GitHub (already done if you're reading this).
-2. Go to [vercel.com](https://vercel.com) and sign in with GitHub.
-3. Click **Add New → Project**, select this repository, and click **Deploy**.
-4. Vercel will build and host the app automatically at a public URL.
+> **Fork users:** update the `repository-url` in the button link above to point to your own fork.
 
 > The app uses only Next.js API routes for server-side RSS fetching – no separate backend or database is needed.
