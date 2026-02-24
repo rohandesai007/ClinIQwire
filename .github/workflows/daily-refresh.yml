@@ -26,8 +26,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add public/last-refreshed.json
-          git diff --cached --quiet || git commit -m "chore: daily news refresh [$(date -u +"%Y-%m-%d")]"
-          git push
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: daily news refresh [$(date -u +"%Y-%m-%d")]"
+            git push origin HEAD
+          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
