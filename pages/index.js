@@ -77,8 +77,28 @@ export default function Home() {
           name="description"
           content="Curated healthcare technology news covering FHIR, EMR/EHR, digital health, and AI in healthcare, sourced from leading industry publications."
         />
+        <meta
+          name="keywords"
+          content="Rohan Desai, Dallas, Healthcare, EMR, EHR, FHIR, Health IT, Tableau, AI, ML, Machine Learning, PowerBI, Digital Health, Clinical Informatics, Healthcare Technology, HL7, Interoperability"
+        />
+        <meta name="author" content="Rohan Desai" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* Open Graph */}
+        <meta property="og:title" content="ClinIQwire – Healthcare Tech News" />
+        <meta
+          property="og:description"
+          content="Curated healthcare technology news covering FHIR, EMR/EHR, digital health, and AI in healthcare."
+        />
+        <meta property="og:type" content="website" />
       </Head>
+
+      {/* Hidden SEO text – not visible to users */}
+      <span
+        aria-hidden="true"
+        style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)", whiteSpace: "nowrap" }}
+      >
+        Rohan Desai Dallas Healthcare EMR EHR FHIR Tableau AI ML Machine Learning PowerBI Digital Health Clinical Informatics Healthcare Technology Health IT HL7 Interoperability
+      </span>
 
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <Header />
