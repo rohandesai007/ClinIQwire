@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClinIQwire – Healthcare Tech News</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f0f4f8;
+      color: #1a2332;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #0d6efd 0%, #0a4fa8 100%);
+      color: #fff;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    }
+    header .logo {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    header .logo span { color: #7dd3fc; }
+    header .tagline {
+      font-size: 0.875rem;
+      opacity: 0.85;
+      margin-left: auto;
+    }
+
+    /* ── Controls bar ── */
+    .controls {
+      background: #fff;
+      border-bottom: 1px solid #dde3ed;
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .controls label { font-size: 0.85rem; font-weight: 600; color: #4b5563; }
+    .filter-btns { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 0.3rem 0.75rem;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 999px;
+      background: #fff;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: #0d6efd;
+      color: #fff;
+      border-color: #0d6efd;
+    }
+    #search {
+      margin-left: auto;
+      padding: 0.35rem 0.75rem;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      width: 220px;
+      outline: none;
+    }
+    #search:focus { border-color: #0d6efd; }
+
+    /* ── Main layout ── */
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    .meta { font-size: 0.8rem; color: #6b7280; margin-bottom: 1.25rem; }
+
+    /* ── News grid ── */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1.25rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover {
+      box-shadow: 0 4px 16px rgba(13,110,253,.15);
+      transform: translateY(-2px);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.35;
+      color: #0f172a;
+    }
+    .card-title a:hover { color: #0d6efd; }
+    .card-summary {
+      font-size: 0.85rem;
+      color: #4b5563;
+      line-height: 1.5;
+      flex-grow: 1;
+    }
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 0.5rem;
+    }
+    .source-name { font-weight: 600; color: #6b7280; }
+    .read-more {
+      color: #0d6efd;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    /* ── Empty state ── */
+    .empty {
+      text-align: center;
+      padding: 3rem;
+      color: #9ca3af;
+      font-size: 1rem;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-top: 2rem;
+    }
+
+    /* ── Hidden util ── */
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">ClinIQ<span>wire</span></div>
+  <div class="tagline">Healthcare &amp; Health Tech News Aggregator &mdash; updated {{ last_updated }}</div>
+</header>
+
+<div class="controls">
+  <label>Filter:</label>
+  <div class="filter-btns">
+    <button class="filter-btn active" data-cat="all">All</button>
+    {% for cat in categories %}
+    <button class="filter-btn" data-cat="{{ cat }}">{{ cat }}</button>
+    {% endfor %}
+  </div>
+  <input id="search" type="search" placeholder="Search articles…" aria-label="Search articles" />
+</div>
+
+<main>
+  <p class="meta">{{ articles|length }} articles from {{ articles|map(attribute='source')|unique|list|length }} sources</p>
+
+  <div class="news-grid" id="grid">
+    {% for article in articles %}
+    <article class="card" data-cat="{{ article.category }}"
+             data-title="{{ article.title|lower }}"
+             data-summary="{{ article.summary|lower }}">
+      <div class="card-header">
+        <span class="badge">{{ article.category }}</span>
+      </div>
+      <h2 class="card-title">
+        <a href="{{ article.link }}" target="_blank" rel="noopener noreferrer">
+          {{ article.title }}
+        </a>
+      </h2>
+      {% if article.summary %}
+      <p class="card-summary">{{ article.summary }}</p>
+      {% endif %}
+      <div class="card-footer">
+        <span class="source-name">{{ article.source }}</span>
+        <span>{{ article.published.strftime('%b %d, %Y') }}</span>
+        <a class="read-more" href="{{ article.link }}" target="_blank" rel="noopener noreferrer">Read →</a>
+      </div>
+    </article>
+    {% else %}
+    <div class="empty">No articles available. Please try again later.</div>
+    {% endfor %}
+  </div>
+</main>
+
+<footer>
+  &copy; {{ 2025 }} ClinIQwire &mdash; Aggregating healthcare &amp; health tech news for professionals.
+</footer>
+
+<script>
+  // ── Category filter ──
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.card');
+  let activeCategory = 'all';
+  let searchQuery = '';
+
+  function applyFilters() {
+    cards.forEach(card => {
+      const catMatch = activeCategory === 'all' || card.dataset.cat === activeCategory;
+      const q = searchQuery.toLowerCase();
+      const textMatch = !q ||
+        card.dataset.title.includes(q) ||
+        card.dataset.summary.includes(q);
+      card.classList.toggle('hidden', !(catMatch && textMatch));
+    });
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCategory = btn.dataset.cat;
+      applyFilters();
+    });
+  });
+
+  // ── Search ──
+  document.getElementById('search').addEventListener('input', e => {
+    searchQuery = e.target.value;
+    applyFilters();
+  });
+</script>
+
+</body>
+</html>
