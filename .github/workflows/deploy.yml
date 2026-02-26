@@ -39,7 +39,8 @@ jobs:
         run: |
           npx vercel --token "$VERCEL_TOKEN" \
             --yes \
-            --prod
+            --prod \
+            --project-name cliniqwire
         env:
           VERCEL_TOKEN: ${{ secrets.cliq }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -47,7 +48,7 @@ jobs:
 
       - name: Deploy to Vercel (preview)
         if: github.event_name == 'pull_request'
-        run: npx vercel --token "$VERCEL_TOKEN" --yes
+        run: npx vercel --token "$VERCEL_TOKEN" --yes --project-name cliniqwire
         env:
           VERCEL_TOKEN: ${{ secrets.cliq }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
