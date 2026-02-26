@@ -6,9 +6,13 @@ on:
     - cron: "0 6 * * *"
   workflow_dispatch:
 
+concurrency:
+  group: daily-refresh
+  cancel-in-progress: false
+
 jobs:
   refresh:
-    name: Refresh & Redeploy
+    name: Refresh Timestamp
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -27,28 +31,6 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add public/last-refreshed.json
           if ! git diff --cached --quiet; then
-            git commit -m "chore: daily news refresh [$(date -u +"%Y-%m-%d")]"
+            git commit -m "chore: daily news refresh [$(date -u +"%Y-%m-%d")] [skip ci]"
             git push origin HEAD
           fi
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Deploy to Vercel (production)
-        run: |
-          npx vercel --token "$VERCEL_TOKEN" \
-            --yes \
-            --prod
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
